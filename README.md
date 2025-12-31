@@ -19,15 +19,21 @@ A Next.js 14 web application for AI-powered Product Manager interview preparatio
    - Session metrics (total sessions, monthly count, total time)
 
 3. **Setup Wizard** (`/setup`)
-   - Multi-step form for interview configuration
-   - **Step 1: CV Upload**
-     - Drag-and-drop file uploader supporting PDF files
-     - File validation (type and size)
-     - Visual feedback on successful upload
-   - **Step 2: Interview Configuration**
-     - Interview Type selector (Product Design, RCA, Strategy)
-     - Domain/Company selector (Fintech, Google, Cred, Meta, Amazon, Other)
-     - Session summary before starting
+    - Multi-step form for interview configuration with smooth animations
+    - **Step 1: CV Upload**
+      - Drag-and-drop file uploader supporting PDF files
+      - File validation (type and size)
+      - PDF text extraction using pdf-parse library
+      - Visual feedback during processing
+    - **Step 2: Review Background**
+      - Editable textarea showing extracted CV text
+      - Users can verify and modify what the AI "read"
+      - Option to upload a different CV if needed
+    - **Step 3: Interview Configuration**
+      - Interview Type selector (Product Design, RCA, Strategy)
+      - Domain/Company selector (Fintech, Google, Cred, Meta, Amazon, Other)
+      - Session summary before starting
+      - Data saved to Supabase when confirmed
 
 4. **Interview Room** (`/interview`)
    - Clean interface with pulse animation representing AI listening
@@ -40,11 +46,14 @@ A Next.js 14 web application for AI-powered Product Manager interview preparatio
 
 ## Technical Stack
 
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
 - **Icons**: Lucide React
 - **State Management**: React Context API
+- **Database**: Supabase (PostgreSQL)
+- **PDF Parsing**: pdf-parse
+- **Animations**: Framer Motion
 
 ## UI Components
 
@@ -67,6 +76,7 @@ interface SessionData {
   domain: Domain | null; // "Fintech" | "Google" | "Cred" | "Meta" | "Amazon" | "Other"
   cvText: string;
   cvFileName: string;
+  interviewId: string | null; // ID from Supabase interviews table
 }
 ```
 
@@ -77,6 +87,9 @@ interface SessionData {
   /dashboard      - Dashboard page
   /setup          - Setup wizard page
   /interview      - Interview room page
+  /api
+    /upload-cv    - PDF parsing API endpoint
+    /interviews   - Interview creation API endpoint
   page.tsx        - Landing page
   layout.tsx      - Root layout with SessionProvider
   globals.css     - Global styles and animations
@@ -86,6 +99,9 @@ interface SessionData {
   SessionContext.tsx - Session state management
 /lib
   utils.ts        - Utility functions
+  supabaseClient.ts - Supabase client initialization
+supabase-schema.sql - Database schema definition
+SUPABASE_SETUP.md    - Supabase setup instructions
 ```
 
 ## Getting Started
@@ -150,18 +166,28 @@ All components follow a Linear-style aesthetic:
 
 ## Current Placeholder Logic
 
-- **File Upload**: Currently logs the file name to console. File content is mocked with a placeholder string.
+- **File Upload**: PDF parsing is implemented with `pdf-parse`. Users can upload PDF files, review and edit the extracted text before proceeding.
+- **Supabase Integration**: Basic database schema is created for storing interview records. Currently uses a dummy user_id for testing.
 - **Interview Audio**: The Interview Room UI is built with visual feedback (pulse animation, mute/unmute), but actual audio processing will be added in future iterations.
+
+## Database Integration
+
+The application uses Supabase for data persistence:
+
+- **interviews table**: Stores interview sessions with CV text, interview type, status, and transcript data
+- **Row Level Security (RLS)**: Enabled to ensure users can only access their own interviews
+- **Schema**: See `supabase-schema.sql` for the complete database structure
+- **Setup**: Follow `SUPABASE_SETUP.md` for database configuration instructions
 
 ## Future Enhancements
 
-- Real CV text extraction from PDF files
-- Backend API integration for AI interview logic
+- Real-time interview transcript storage
 - Voice-to-text and text-to-voice functionality
 - Interview recording and playback
 - Detailed feedback and scoring system
 - User authentication and profile management
 - Interview analytics and progress tracking
+- Support for additional CV formats (DOCX, TXT)
 
 ## License
 

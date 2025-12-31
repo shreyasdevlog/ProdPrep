@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { Mic, Target, TrendingUp } from "lucide-react";
+import { Mic, Target, TrendingUp, Settings } from "lucide-react";
 
 export default function Home() {
   return (
@@ -16,9 +16,16 @@ export default function Home() {
                 AI PM Interview Prep
               </span>
             </div>
-            <Link href="/dashboard">
-              <Button variant="default">Get Started</Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/settings">
+                <Button variant="ghost" size="sm">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/dashboard">
+                <Button variant="default">Get Started</Button>
+              </Link>
+            </div>
           </div>
         </div>
       </nav>

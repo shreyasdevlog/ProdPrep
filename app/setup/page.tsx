@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/Label";
 import { Select } from "@/components/ui/Select";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { useSession, InterviewType, Domain } from "@/contexts/SessionContext";
+import { useKeys } from "@/hooks/useKeys";
 import { Mic, ArrowLeft, ArrowRight, Upload, Settings, FileText, Loader2, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -17,6 +18,7 @@ type Step = "upload" | "review" | "config";
 export default function SetupWizard() {
   const router = useRouter();
   const { sessionData, updateSessionData } = useSession();
+  const { keys } = useKeys();
   const [currentStep, setCurrentStep] = useState<Step>("upload");
   const [interviewType, setInterviewType] = useState<InterviewType | "">(
     sessionData.interviewType || ""
@@ -87,6 +89,8 @@ export default function SetupWizard() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-supabase-url": keys.supabaseUrl,
+          "x-supabase-key": keys.supabaseAnonKey,
         },
         body: JSON.stringify({
           cv_text: sessionData.cvText,
@@ -100,7 +104,7 @@ export default function SetupWizard() {
       }
 
       const data = await response.json();
-      
+
       updateSessionData({
         interviewType: interviewType as InterviewType,
         domain: domain as Domain,
@@ -133,12 +137,19 @@ export default function SetupWizard() {
                 AI PM Interview Prep
               </span>
             </Link>
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Dashboard
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link href="/settings">
+                <Button variant="ghost" size="sm">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </nav>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Mic, Plus, Calendar, Clock, ArrowRight } from "lucide-react";
+import { Mic, Plus, Calendar, Clock, ArrowRight, Settings } from "lucide-react";
 
 interface Interview {
   id: string;
@@ -52,6 +52,11 @@ export default function Dashboard() {
               <span className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
                 AI PM Interview Prep
               </span>
+            </Link>
+            <Link href="/settings">
+              <Button variant="ghost" size="sm">
+                <Settings className="h-4 w-4" />
+              </Button>
             </Link>
           </div>
         </div>

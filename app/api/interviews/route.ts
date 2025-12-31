@@ -12,11 +12,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Dynamic import to avoid build-time validation issues
-    const { supabase } = await import('@/lib/supabaseClient');
+    // Get Supabase credentials from request headers (set by client from session storage)
+    const supabaseUrl = request.headers.get('x-supabase-url') || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    const supabaseKey = request.headers.get('x-supabase-key') || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
     // Check if Supabase is configured
-    if (!supabase) {
+    if (!supabaseUrl || supabaseUrl.includes('placeholder') || !supabaseKey || supabaseKey.includes('placeholder-key')) {
       console.warn('Supabase not configured. Using mock mode.');
       // Return a mock response for development
       const mockData = {
@@ -31,6 +32,10 @@ export async function POST(request: NextRequest) {
       };
       return NextResponse.json({ data: mockData }, { status: 201 });
     }
+
+    // Dynamically import and create client with provided credentials
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // For now, we'll use a dummy user_id if authentication is not set up
     // This should be replaced with actual user authentication

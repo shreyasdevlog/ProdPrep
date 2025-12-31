@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { useSession } from "@/contexts/SessionContext";
-import { Mic, MicOff, PhoneOff } from "lucide-react";
+import { Mic, MicOff, PhoneOff, Settings } from "lucide-react";
 
 export default function InterviewRoom() {
   const router = useRouter();
@@ -65,6 +65,9 @@ export default function InterviewRoom() {
               <div className="rounded-lg bg-zinc-900 px-3 py-1.5 text-sm font-medium text-zinc-50">
                 {formatDuration(duration)}
               </div>
+              <Button variant="ghost" size="sm" className="text-zinc-50 hover:text-zinc-100">
+                <Settings className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ export interface SessionData {
   domain: Domain | null;
   cvText: string;
   cvFileName: string;
+  interviewId: string | null;
 }
 
 interface SessionContextType {
@@ -23,6 +24,7 @@ const defaultSessionData: SessionData = {
   domain: null,
   cvText: "",
   cvFileName: "",
+  interviewId: null,
 };
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
